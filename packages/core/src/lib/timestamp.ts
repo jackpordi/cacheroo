@@ -11,12 +11,13 @@ export enum MillisecondsConversion {
 }
 
 export class Timestamp {
-  private ts = Date.now() / 1000;
+  private ts = Date.now();
 
   public isExpired(t: number, unit: TimeUnit = TimeUnit.SECONDS) {
     const now = Date.now();
     if (unit === TimeUnit.SECONDS) {
-      return this.ts < (now - t * MillisecondsConversion.FROM_SECONDS);
+      const expiryTime = (now - t * MillisecondsConversion.FROM_SECONDS);
+      return this.ts < expiryTime;
     } if (unit === TimeUnit.MINUTES) {
       return this.ts < (now - t * MillisecondsConversion.FROM_MINUTES);
     }

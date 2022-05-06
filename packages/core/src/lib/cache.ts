@@ -36,6 +36,8 @@ export class Cache<K, V> extends BaseCache<K, V> {
     if (inCache !== undefined && inCache[0].isValid(cacheTimeout, units)) {
       return inCache[1];
     }
+
+    this.delete(key);
     return undefined;
   }
 
