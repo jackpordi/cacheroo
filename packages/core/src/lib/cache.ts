@@ -15,6 +15,12 @@ const DEFAULT_CONFIG = {
   activeClearing: false,
 };
 
+/**
+ * Default cache class
+ * @template K - Type of keys
+ * @template V - Type of values
+ * @extends BaseCache
+ */
 export class Cache<K, V> extends BaseCache<K, V> {
   protected readonly config: DefaultCacheConfig;
 
@@ -27,6 +33,15 @@ export class Cache<K, V> extends BaseCache<K, V> {
     this.config = merged;
   }
 
+  /**
+   * Gets a value from the cache fro the key
+   *
+   * @param {K} key - Key to look up
+   * @param {number} [cacheTimeout] - Overridable ttl.
+   * Only works if lesser than activeClearing, if activeClearing is set.
+   * @param {TimeUnit} [units] - Seconds, minutes, or hours. Defaults to cache config.
+   * @returns {V | undefined} The result if in the cache, or undefined.
+   */
   public get(
     key: K,
     cacheTimeout: number = this.config.ttl,
@@ -41,11 +56,19 @@ export class Cache<K, V> extends BaseCache<K, V> {
     return undefined;
   }
 
+  /**
+   * Sets a value in the cache based on the key
+   *
+   * @param {K} key - Key to set
+   * @param {V} value - Value to set
+   * @param {number} [ttl] - Time to live
+   * @param {TimeUnit} [ttlUnits] - Seconds, minutes, or hours. Defaults to cache config.
+   */
   public override set(
     key: K,
     value: V,
-    ttl = this.config.ttl,
-    ttlUnits = this.config.ttlUnits,
+    ttl: number = this.config.ttl,
+    ttlUnits: TimeUnit = this.config.ttlUnits,
 
   ) {
     super.set(key, value);
@@ -55,7 +78,13 @@ export class Cache<K, V> extends BaseCache<K, V> {
     }
   }
 
-  public take(k: K) {
+  /**
+   * Gets the value and deletes it (if it exists).
+   *
+   * @param {K} k - Key
+   * @returns {V | undefined} The value if it exists, otherwise undefined.
+   */
+  public take(k: K): V | undefined {
     const res = this.get(k);
 
     if (res) this.delete(k);

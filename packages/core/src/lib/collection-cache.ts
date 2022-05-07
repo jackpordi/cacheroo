@@ -7,8 +7,15 @@ export interface CollectionCacheConfig<K, V> extends DefaultCacheConfigInput {
 
 type GetOneFn<K, V> = (k: K) => Promise<V>;
 
-// Cache class to support fetching
-// from remote collections
+/**
+ * Cache class to support fetching
+ * from remote collections. Requires the get/fetch function
+ * to be passed in.
+ *
+ * @template K - Key type
+ * @template V - Value type
+ * @extends Cache
+ */
 export class CollectionCache<K, V> extends Cache<K, V> {
   private readonly getter: GetOneFn<K, V>;
 
@@ -19,6 +26,18 @@ export class CollectionCache<K, V> extends Cache<K, V> {
     this.getter = config.getter;
   }
 
+  /**
+   * Looks up the value
+   * If it exits in cache, then will use the cache
+   * otherwise will fetch the getter function will be called
+   * and result stored in cache.
+   *
+   * @async
+   * @param {K} key - [TODO:description]
+   * @param {number} [cacheTimeout] - [TODO:description]
+   * @param {TimeUnit} [units] - [TODO:description]
+   * @returns {Promise<V>} [TODO:description]
+   */
   public async lookup(
     key: K,
     cacheTimeout: number = this.config.ttl,

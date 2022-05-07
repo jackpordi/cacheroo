@@ -18,7 +18,14 @@ export abstract class BaseCache<K, V> {
     this.maxSize = config.maxSize;
   }
 
-  public has(key: K) {
+  /**
+   * Checks whether the key is in the cache
+   * If activeClearing is not set or false,
+   * then the value may exist in cache but already be expired
+   * @param {K} key - Key
+   * @returns {boolean}
+   */
+  public has(key: K): boolean {
     const inCache = this.cache.get(key);
     return !!inCache;
   }
@@ -33,19 +40,42 @@ export abstract class BaseCache<K, V> {
     this.cache.set(key, [ new Timestamp(), value ]);
   }
 
+  /**
+   * Clears the entire cache
+   */
   public clear() {
     this.cache.clear();
   }
 
+  /**
+   * The number of elements in the cache
+   *
+   * @returns {number}
+   */
   public get size() {
     return this.cache.size;
   }
 
-  public delete(k: K) {
+  /**
+   * Deletes an element in the cache
+   */
+  public delete(k: K): void {
     this.cache.delete(k);
   }
 
-  public keys() {
+  /**
+   * Returns an iterator over the key-value pairs
+   */
+  public* entries() {
+    for (const [ k, [ _, v ] ] of this.cache.entries()) {
+      yield [ k, v ];
+    }
+  }
+
+  /**
+   * Returns an iterator over the keys
+   */
+  public keys(): IterableIterator<K> {
     return this.cache.keys();
   }
 

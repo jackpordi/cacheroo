@@ -38,6 +38,16 @@ module.exports = {
     "array-bracket-spacing": [ 2, "always" ],
     quotes: [ "error", "double" ],
     "@typescript-eslint/quotes": [ "error", "double" ],
+    "@typescript-eslint/naming-convention": "off",
+    "no-unused-vars": "off",
+    '@typescript-eslint/no-unused-vars': [
+      'warn', // or error
+      { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
     semi: [ "error", "always" ],
     indent: "off",
     camelcase: "off",
